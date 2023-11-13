@@ -1,32 +1,63 @@
 version: '3.8'
 services:
-  elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.4.0
-    container_name: elasticsearch
-    volumes:
-      - elasticsearch-data:/usr/share/elasticsearch/data
-    ports:
-      - 9200:9200
-    restart: always
-    environment:
-      - xpack.security.enabled=false
-      - discovery.type=single-node
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-  kibana:
-    depends_on:
-      - elasticsearch
-    image: docker.elastic.co/kibana/kibana:7.4.0
-    container_name: kibana
-    volumes:
-      - kibana-data:/usr/share/kibana/data
-    ports:
-     - 5601:5601
-    restart: always
-    environment:
-      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+  # elasticsearch:
+    # image: elasticsearch:7.17.14
+    # container_name: elasticsearch
+    # volumes:
+      # - elasticsearch-data:/usr/share/elasticsearch/data
+    # ports:
+      # - 9200:9200
+    # restart: always
+    # environment:
+      # - xpack.security.enabled=false
+      # - discovery.type=single-node
+    # ulimits:
+      # memlock:
+        # soft: -1
+        # hard: -1
+  # kibana:
+    # depends_on:
+      # - elasticsearch
+    # image: docker.elastic.co/kibana/kibana:7.4.0
+    # container_name: kibana
+    # volumes:
+      # - kibana-data:/usr/share/kibana/data
+    # ports:
+     # - 5601:5601
+    # restart: always
+    # environment:
+      # - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+  # zookeeper:
+    # image: confluentinc/cp-zookeeper
+    # volumes:
+      # - zookeeper_data:/var/lib/zookeeper/data:Z
+      # - zookeeper_log:/var/lib/zookeeper/log:Z
+    # environment:
+      # ZOOKEEPER_CLIENT_PORT: '2181'
+      # ZOOKEEPER_ADMIN_ENABLE_SERVER: 'false'
+  # kafka:
+    # image: confluentinc/cp-kafka
+    # volumes:
+      # - kafka_data:/var/lib/kafka/data:Z
+    # ports:
+      # - 9092:9092
+      # - 9091:9091
+    # environment:
+      # KAFKA_BROKER_ID: '0'
+      # KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      # KAFKA_NUM_PARTITIONS: '12'
+      # KAFKA_COMPRESSION_TYPE: 'gzip'
+      # KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: '1'
+      # KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: '1'
+      # KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: '1'
+      # KAFKA_ADVERTISED_LISTENERS: 'PLAINTEXT://kafka:9092'
+      # KAFKA_CONFLUENT_SUPPORT_METRICS_ENABLE: 'false'
+      # KAFKA_JMX_PORT: '9091'
+      # KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
+      # KAFKA_AUTHORIZER_CLASS_NAME: 'kafka.security.authorizer.AclAuthorizer'
+      # KAFKA_ALLOW_EVERYONE_IF_NO_ACL_FOUND: 'true'
+    # depends_on:
+        # - zookeeper
   db:
     container_name: db-sqlserver
     image: "mcr.microsoft.com/mssql/server:2019-latest"
@@ -46,4 +77,10 @@ volumes:
   kibana-data:
     driver: local
   sqlserver-data:
+    driver: local
+  kafka_data:
+    driver: local
+  zookeeper_data:
+    driver: local
+  zookeeper_log:
     driver: local

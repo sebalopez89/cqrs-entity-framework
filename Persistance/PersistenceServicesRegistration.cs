@@ -1,6 +1,5 @@
 ﻿using CQRS.Application.Contracts.Persistence;
 using CQRS.Persistence.Respositories;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CQRS.Persistence

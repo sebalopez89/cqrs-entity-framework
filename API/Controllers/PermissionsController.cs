@@ -1,4 +1,3 @@
-using Azure;
 using CQRS.Application.Operation.Commands.Permission;
 using CQRS.Application.Operation.Dtos;
 using CQRS.Application.Operation.Responses;
@@ -29,6 +28,7 @@ namespace CQRS.Host.Controllers
         [HttpPost]
         public async Task<ActionResult<BaseCommandResponse>> CreatePermission([FromBody] CreatePermissionCommand command)
         {
+            _logger.LogInformation("Create method: ", command);
             var response = await _mediator.Send(command);
             if (response.IsSuccess)
             {
@@ -41,6 +41,7 @@ namespace CQRS.Host.Controllers
         [Route("{Id}")]
         public async Task<ActionResult<BaseCommandResponse>> UpdatePermission([FromRoute] int Id, [FromBody] UpdatePermissionCommandDTO command)
         {
+            _logger.LogInformation("update method: ", command);
             var updateCommand = new UpdatePermissionCommand(){
                 EmployeeSurname = command.EmployeeSurname,
                 EmployeeForename = command.EmployeeForename,
@@ -58,6 +59,7 @@ namespace CQRS.Host.Controllers
         [HttpGet]
         public async Task<ActionResult<GetAllPermissionsQueryResponse>> GetPermissions()
         {
+            _logger.LogInformation("get method");
             var query = new GetAllPermissionsQuery();
             var response = await _mediator.Send(query);
             if (response.IsSuccess)

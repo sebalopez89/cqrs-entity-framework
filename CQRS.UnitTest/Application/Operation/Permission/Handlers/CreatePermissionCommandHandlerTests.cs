@@ -39,6 +39,7 @@ public class CreatePermissionCommandHandlerTests : IClassFixture<EfSqliteFixture
             new PermissionTypeRepository(_fixture.Context, Substitute.For<ILogger<PermissionTypeRepository>>()));
 
         var handler = new CreatePermissionCommandHandler(
+            Substitute.For<ILogger<CreatePermissionCommandHandler>>(),
             _validator,
             unitOfWork);
 
@@ -69,6 +70,7 @@ public class CreatePermissionCommandHandlerTests : IClassFixture<EfSqliteFixture
             new PermissionTypeRepository(_fixture.Context, Substitute.For<ILogger<PermissionTypeRepository>>()));
 
         var handler = new CreatePermissionCommandHandler(
+            Substitute.For<ILogger<CreatePermissionCommandHandler>>(),
             _validator,
             unitOfWork);
 
@@ -98,6 +100,7 @@ public class CreatePermissionCommandHandlerTests : IClassFixture<EfSqliteFixture
             new PermissionTypeRepository(_fixture.Context, Substitute.For<ILogger<PermissionTypeRepository>>()));
 
         var handler = new CreatePermissionCommandHandler(
+            Substitute.For<ILogger<CreatePermissionCommandHandler>>(),
             _validator,
             unitOfWork);
 
