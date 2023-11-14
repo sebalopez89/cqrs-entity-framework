@@ -1,4 +1,5 @@
-﻿using CQRS.Domain;
+﻿using CQRS.Application.Helpers;
+using CQRS.Domain;
 using FluentValidation;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -27,6 +28,7 @@ namespace CQRS.Application
             var client = new ElasticClient(settings);
                 
             services.AddScoped<IElasticClient>(_ => client);
+            services.AddScoped<IProducerMessageSender, ProducerMessageSender>();
 
             return services;
         }

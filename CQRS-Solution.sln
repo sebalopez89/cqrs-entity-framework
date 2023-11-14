@@ -23,9 +23,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastru
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{95D09B11-9880-447D-8AC9-E233E0558DA9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CQRS.UnitTest", "CQRS.UnitTest\CQRS.UnitTest.csproj", "{676FF610-D294-4283-BE4B-85304127E870}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CQRS.UnitTest", "UnitTest\CQRS.UnitTest.csproj", "{676FF610-D294-4283-BE4B-85304127E870}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CQRS.IntegrationTest", "CQRS.IntegrationTest\CQRS.IntegrationTest.csproj", "{9C96BADA-00C4-4EF2-A38B-F536DA8EBCDF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CQRS.IntegrationTest", "IntegrationTest\CQRS.IntegrationTest.csproj", "{9C96BADA-00C4-4EF2-A38B-F536DA8EBCDF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

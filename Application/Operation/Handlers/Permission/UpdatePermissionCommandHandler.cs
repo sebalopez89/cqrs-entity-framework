@@ -18,15 +18,18 @@ namespace CQRS.Application.Operation.Handlers.Permission
         private readonly IValidator<UpdatePermissionCommand> _validator;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IElasticClient _elasticClient;
+        private readonly IProducerMessageSender _messageSender;
 
         public UpdatePermissionCommandHandler(
             IValidator<UpdatePermissionCommand> validator,
             IUnitOfWork unitOfWork,
-            IElasticClient elasticClient)
+            IElasticClient elasticClient,
+            IProducerMessageSender messageSender)
         {
             _validator = validator;
             _unitOfWork = unitOfWork;
             _elasticClient = elasticClient;
+            _messageSender = messageSender;
         }
 
         public async Task<Result<BaseCommandResponse>> Handle(
@@ -67,7 +70,7 @@ namespace CQRS.Application.Operation.Handlers.Permission
 
             var response = await _elasticClient.IndexDocumentAsync(permisssion);
 
-            ProducerMessageSender.SendMessage(new ProducerMessage("Update"));
+            _messageSender.SendMessage(new ProducerMessage("Update"));
 
             return Result<BaseCommandResponse>.Success(
                 new BaseCommandResponse(permisssion.Id), "Successfully updated!");

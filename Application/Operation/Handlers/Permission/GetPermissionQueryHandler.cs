@@ -16,13 +16,16 @@ namespace CQRS.Application.Operation.Handlers.Permission
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IElasticClient _elasticClient;
+        private readonly IProducerMessageSender _messageSender;
 
         public GetPermissionQueryHandler(
             IUnitOfWork unitOfWork,
-            IElasticClient elasticClient)
+            IElasticClient elasticClient,
+            IProducerMessageSender messageSender)
         {
             _unitOfWork = unitOfWork;
             _elasticClient = elasticClient;
+            _messageSender = messageSender;
         }
 
         public async Task<Result<GetAllPermissionsQueryResponse>> Handle(
@@ -36,7 +39,7 @@ namespace CQRS.Application.Operation.Handlers.Permission
                 var response = await _elasticClient.IndexDocumentAsync(permisssions.First());
             }
 
-            ProducerMessageSender.SendMessage(new ProducerMessage("Get"));
+            _messageSender.SendMessage(new ProducerMessage("Get"));
 
             return Result<GetAllPermissionsQueryResponse>.Success(
                 new GetAllPermissionsQueryResponse() { 

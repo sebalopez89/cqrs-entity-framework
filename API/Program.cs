@@ -11,6 +11,7 @@ using Serilog;
 using Serilog.Exceptions;
 using Serilog.Sinks.Elasticsearch;
 using System.Reflection;
+using CQRS.Application.Helpers;
 
 var builder = WebApplication.CreateBuilder(args);
 var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
@@ -22,6 +23,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.ConfigureApplicationServices(builder.Configuration);
 builder.Services.ConfigureDatabaseServices(builder.Configuration);
 builder.Services.ConfigurePersistanceServices();
+builder.Services.Configure<KafkaSettings>(builder.Configuration.GetSection("Kafka"));
 
 void ConfigureLogging()
 {
@@ -42,10 +44,10 @@ void ConfigureLogging()
 
 ElasticsearchSinkOptions ConfigureElasticSink(IConfigurationRoot configuration, string environment)
 {
-    return new ElasticsearchSinkOptions(new Uri(configuration["ElasticConfiguration:Uri"]))
+    return new ElasticsearchSinkOptions(new Uri(configuration["ElasticConfiguration:Uri"]!))
     {
         AutoRegisterTemplate = true,
-        IndexFormat = $"{Assembly.GetExecutingAssembly().GetName().Name.ToLower().Replace(".", "-")}-{environment.ToLower()}",
+        IndexFormat = $"{Assembly.GetExecutingAssembly().GetName().Name!.ToLower().Replace(".", "-")}",
         NumberOfReplicas = 1,
         NumberOfShards = 2
     };

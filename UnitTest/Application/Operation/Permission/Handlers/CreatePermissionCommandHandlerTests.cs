@@ -11,6 +11,8 @@ using CQRS.UnitTests.Fixtures;
 using Xunit;
 using Xunit.Categories;
 using CQRS.Application.Operation.Handlers.Permission;
+using Nest;
+using CQRS.Application.Helpers;
 
 namespace CQRS.UnitTest.Application.Operation.Permission.Handlers;
 
@@ -19,8 +21,16 @@ public class CreatePermissionCommandHandlerTests : IClassFixture<EfSqliteFixture
 {
     private readonly CreatePermissionCommandValidator _validator = new();
     private readonly EfSqliteFixture _fixture;
+    private readonly UnitOfWork _unitOfWork;
 
-    public CreatePermissionCommandHandlerTests(EfSqliteFixture fixture) => _fixture = fixture;
+    public CreatePermissionCommandHandlerTests(EfSqliteFixture fixture)
+    {
+        _fixture = fixture;
+        _unitOfWork = new UnitOfWork(
+            _fixture.Context,
+            new PermissionRepository(_fixture.Context, Substitute.For<ILogger<PermissionRepository>>()),
+            new PermissionTypeRepository(_fixture.Context, Substitute.For<ILogger<PermissionTypeRepository>>()));
+    }
 
     [Fact]
     public async Task Add_ValidCommand_ShouldReturnsSuccessResult()
@@ -33,15 +43,13 @@ public class CreatePermissionCommandHandlerTests : IClassFixture<EfSqliteFixture
             PermissionTypeId = 1
         };
 
-        var unitOfWork = new UnitOfWork(
-            _fixture.Context,
-            new PermissionRepository(_fixture.Context, Substitute.For<ILogger<PermissionRepository>>()),
-            new PermissionTypeRepository(_fixture.Context, Substitute.For<ILogger<PermissionTypeRepository>>()));
 
         var handler = new CreatePermissionCommandHandler(
             Substitute.For<ILogger<CreatePermissionCommandHandler>>(),
             _validator,
-            unitOfWork);
+            _unitOfWork,
+            Substitute.For<IElasticClient>(),
+            Substitute.For<IProducerMessageSender>());
 
         // Act
         var act = await handler.Handle(command, CancellationToken.None);
@@ -64,15 +72,13 @@ public class CreatePermissionCommandHandlerTests : IClassFixture<EfSqliteFixture
             PermissionTypeId = 1
         };
 
-        var unitOfWork = new UnitOfWork(
-            _fixture.Context,
-            new PermissionRepository(_fixture.Context, Substitute.For<ILogger<PermissionRepository>>()),
-            new PermissionTypeRepository(_fixture.Context, Substitute.For<ILogger<PermissionTypeRepository>>()));
-
         var handler = new CreatePermissionCommandHandler(
             Substitute.For<ILogger<CreatePermissionCommandHandler>>(),
             _validator,
-            unitOfWork);
+            _unitOfWork,
+            Substitute.For<IElasticClient>(),
+            Substitute.For<IProducerMessageSender>()
+            );
 
         // Act
         var act = await handler.Handle(command, CancellationToken.None);
@@ -102,7 +108,9 @@ public class CreatePermissionCommandHandlerTests : IClassFixture<EfSqliteFixture
         var handler = new CreatePermissionCommandHandler(
             Substitute.For<ILogger<CreatePermissionCommandHandler>>(),
             _validator,
-            unitOfWork);
+            _unitOfWork,
+            Substitute.For<IElasticClient>(),
+            Substitute.For<IProducerMessageSender>());
 
         // Act
         var act = await handler.Handle(command, CancellationToken.None);
