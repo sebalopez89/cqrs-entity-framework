@@ -20,17 +20,20 @@ namespace CQRS.Application.Operation.Handlers.Permission
         private readonly IValidator<CreatePermissionCommand> _validator;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IElasticClient _elasticClient;
+        private readonly IProducerMessageSender _messageSender;
 
         public CreatePermissionCommandHandler(
             ILogger<CreatePermissionCommandHandler> logger,
             IValidator<CreatePermissionCommand> validator,
             IUnitOfWork unitOfWork,
-            IElasticClient elasticClient)
+            IElasticClient elasticClient,
+            IProducerMessageSender messageSender)
         {
             _logger = logger;
             _validator = validator;
             _unitOfWork = unitOfWork;
             _elasticClient = elasticClient;
+            _messageSender = messageSender;
         }
 
         public async Task<Result<BaseCommandResponse>> Handle(
@@ -62,7 +65,7 @@ namespace CQRS.Application.Operation.Handlers.Permission
 
             var response = await _elasticClient.IndexDocumentAsync(permisssion);
 
-            ProducerMessageSender.SendMessage(new ProducerMessage("Create"));
+            _messageSender.SendMessage(new ProducerMessage("Create"));
 
             return Result<BaseCommandResponse>.Success(
                 new BaseCommandResponse(permisssion.Id), "Successfully registered!");
